@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cardio Metrics Pro</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#f0f4ff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Cardio Metrics" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f4ff;
+      --surface: #ffffff;
+      --surface2: #f8faff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text2: #475569;
+      --text3: #94a3b8;
+      --blue: #2563eb;
+      --blue-light: #dbeafe;
+      --green: #059669;
+      --green-light: #d1fae5;
+      --orange: #ea580c;
+      --orange-light: #ffedd5;
+      --purple: #7c3aed;
+      --purple-light: #ede9fe;
+      --red: #dc2626;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 40px 0;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 20px 14px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 12px #2563eb12;
+    }
+    .header-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+    .header-icon {
+      width: 42px; height: 42px; border-radius: 12px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+      box-shadow: 0 4px 12px #2563eb33;
+    }
+    .header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.3px; }
+    .header-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
+
+    /* MAIN */
+    .main { max-width: 900px; margin: 0 auto; padding: 24px 16px 0; }
+
+    /* FILTERS */
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text3); margin-bottom: 8px; font-weight: 600;
+    }
+    .filters { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
+      border: 1.5px solid var(--border); background: var(--surface);
+      color: var(--text2); cursor: pointer; transition: all .2s;
+      font-family: 'Barlow', sans-serif;
+    }
+    .chip:hover { border-color: var(--blue); color: var(--blue); }
+    .chip.active-age { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+    .chip.active-sed  { border-color: #dc2626; background: #fee2e2; color: #dc2626; }
+    .chip.active-act  { border-color: #ea580c; background: #ffedd5; color: #ea580c; }
+    .chip.active-med  { border-color: #2563eb; background: #dbeafe; color: #2563eb; }
+    .chip.active-pro  { border-color: #7c3aed; background: #ede9fe; color: #7c3aed; }
+    .chip.active-eli  { border-color: #059669; background: #d1fae5; color: #059669; }
+
+    /* CARDS */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .card {
+      background: var(--surface); border-radius: 16px;
+      border: 1.5px solid var(--border);
+      padding: 18px 20px;
+      box-shadow: 0 2px 8px #0f172a08;
+      transition: box-shadow .2s;
+    }
+    .card:hover { box-shadow: 0 4px 20px #0f172a14; }
+    .card-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; font-weight: 600; }
+    .card-value { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 800; line-height: 1; }
+    .card-range { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 800; line-height: 1; }
+    .card-unit { font-size: 13px; color: var(--text3); font-weight: 500; margin-left: 4px; }
+    .card-sub { font-size: 12px; color: var(--text3); margin-top: 8px; }
+    .bar-bg { background: var(--bg); border-radius: 6px; height: 6px; margin-top: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 6px; transition: width .5s ease; }
+
+    /* BADGE */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--text3);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 7px 13px; margin-bottom: 18px;
+    }
+
+    /* TABLE */
+    .table-wrap {
+      background: var(--surface); border-radius: 16px;
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 2px 8px #0f172a08;
+    }
+    .table-head {
+      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .table-head-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.3px; }
+    .table-head-sub { font-size: 11px; color: var(--text3); }
+    .scroll-x { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead tr { background: var(--surface2); }
+    th { padding: 10px 16px; text-align: left; color: var(--text3); font-weight: 600; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Barlow Condensed', sans-serif; white-space: nowrap; }
+    tbody tr { border-top: 1px solid var(--border); }
+    tbody tr:hover { background: var(--surface2); }
+    td { padding: 10px 16px; white-space: nowrap; }
+    .cond-badge {
+      padding: 3px 10px; border-radius: 20px; font-size: 11px;
+      font-weight: 700; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.5px;
+    }
+    .table-foot { padding: 9px 20px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text3); }
+
+    /* LEGEND */
+    .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 22px; }
+    .legend-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text3); max-width: 260px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 3px; flex-shrink: 0; }
+
+    /* EMPTY */
+    .empty { padding: 40px; text-align: center; color: var(--text3); }
+
+    @media (max-width: 480px) {
+      .header-title { font-size: 18px; }
+      .card-value, .card-range { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="header-icon">❤️</div>
+    <div>
+      <div class="header-title">Cardio Metrics Pro</div>
+      <div class="header-sub">VFC · VO₂ · Frecuencia Cardíaca · Filtros por edad y condición</div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="filters">
+    <div>
+      <div class="section-label">Grupo de edad</div>
+      <div class="filter-chips" id="age-chips"></div>
+    </div>
+    <div>
+      <div class="section-label">Condición física</div>
+      <div class="filter-chips" id="cond-chips"></div>
+    </div>
+  </div>
+
+  <div class="badge" id="badge">📊 Cargando...</div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="table-wrap">
+    <div class="table-head">
+      <span class="table-head-title">Tabla de Referencia</span>
+      <span class="table-head-sub">Valores basados en literatura científica</span>
+    </div>
+    <div class="scroll-x">
+      <table>
+        <thead>
+          <tr>
+            <th>Edad</th><th>Condición</th><th>FC Máx (lpm)</th>
+            <th>FC Mín (lpm)</th><th>VO₂ Máx</th><th>VO₂ Mín</th><th>VFC (ms)</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="table-foot" id="table-foot"></div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:#059669"></span><span><strong style="color:#059669">VFC</strong>: Variabilidad de la Frecuencia Cardíaca — indicador de recuperación y estrés autonómico.</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:#2563eb"></span><span><strong style="color:#2563eb">VO₂</strong>: Consumo máximo de oxígeno — indicador de capacidad aeróbica.</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:#ea580c"></span><span><strong style="color:#ea580c">FC</strong>: Frecuencia cardíaca en latidos por minuto.</span></div>
+  </div>
+</main>
+
+<script>
+const DATA = [
+  { age:"18-25", cond:"sedentario", hrMax:197, hrMin:62, vo2Max:38, vo2Min:28, vfc:42 },
+  { age:"26-35", cond:"sedentario", hrMax:187, hrMin:65, vo2Max:35, vo2Min:25, vfc:38 },
+  { age:"36-45", cond:"sedentario", hrMax:177, hrMin:68, vo2Max:31, vo2Min:22, vfc:33 },
+  { age:"46-55", cond:"sedentario", hrMax:167, hrMin:70, vo2Max:27, vo2Min:18, vfc:28 },
+  { age:"56-65", cond:"sedentario", hrMax:157, hrMin:72, vo2Max:23, vo2Min:15, vfc:22 },
+  { age:"65+",   cond:"sedentario", hrMax:148, hrMin:74, vo2Max:19, vo2Min:12, vfc:18 },
+  { age:"18-25", cond:"activo", hrMax:200, hrMin:55, vo2Max:48, vo2Min:38, vfc:58 },
+  { age:"26-35", cond:"activo", hrMax:190, hrMin:57, vo2Max:45, vo2Min:35, vfc:54 },
+  { age:"36-45", cond:"activo", hrMax:180, hrMin:59, vo2Max:41, vo2Min:31, vfc:49 },
+  { age:"46-55", cond:"activo", hrMax:170, hrMin:62, vo2Max:37, vo2Min:27, vfc:43 },
+  { age:"56-65", cond:"activo", hrMax:160, hrMin:64, vo2Max:32, vo2Min:23, vfc:37 },
+  { age:"65+",   cond:"activo", hrMax:151, hrMin:66, vo2Max:27, vo2Min:19, vfc:31 },
+  { age:"18-25", cond:"deportista-medio", hrMax:202, hrMin:48, vo2Max:56, vo2Min:46, vfc:72 },
+  { age:"26-35", cond:"deportista-medio", hrMax:192, hrMin:50, vo2Max:53, vo2Min:43, vfc:68 },
+  { age:"36-45", cond:"deportista-medio", hrMax:182, hrMin:52, vo2Max:49, vo2Min:39, vfc:62 },
+  { age:"46-55", cond:"deportista-medio", hrMax:172, hrMin:54, vo2Max:44, vo2Min:34, vfc:55 },
+  { age:"56-65", cond:"deportista-medio", hrMax:162, hrMin:56, vo2Max:39, vo2Min:29, vfc:48 },
+  { age:"65+",   cond:"deportista-medio", hrMax:153, hrMin:58, vo2Max:33, vo2Min:24, vfc:40 },
+  { age:"18-25", cond:"deportista-pro", hrMax:205, hrMin:38, vo2Max:72, vo2Min:60, vfc:98 },
+  { age:"26-35", cond:"deportista-pro", hrMax:195, hrMin:40, vo2Max:68, vo2Min:56, vfc:92 },
+  { age:"36-45", cond:"deportista-pro", hrMax:185, hrMin:42, vo2Max:63, vo2Min:51, vfc:85 },
+  { age:"46-55", cond:"deportista-pro", hrMax:175, hrMin:44, vo2Max:57, vo2Min:45, vfc:76 },
+  { age:"56-65", cond:"deportista-pro", hrMax:165, hrMin:46, vo2Max:50, vo2Min:39, vfc:66 },
+  { age:"65+",   cond:"deportista-pro", hrMax:156, hrMin:48, vo2Max:43, vo2Min:33, vfc:56 },
+  { age:"18-25", cond:"elite", hrMax:207, hrMin:32, vo2Max:85, vo2Min:72, vfc:118 },
+  { age:"26-35", cond:"elite", hrMax:197, hrMin:34, vo2Max:80, vo2Min:67, vfc:110 },
+  { age:"36-45", cond:"elite", hrMax:187, hrMin:36, vo2Max:74, vo2Min:61, vfc:101 },
+  { age:"46-55", cond:"elite", hrMax:177, hrMin:38, vo2Max:67, vo2Min:54, vfc:90 },
+  { age:"56-65", cond:"elite", hrMax:167, hrMin:40, vo2Max:59, vo2Min:47, vfc:78 },
+  { age:"65+",   cond:"elite", hrMax:158, hrMin:42, vo2Max:51, vo2Min:40, vfc:66 },
+];
+
+const CONDITIONS = [
+  { id:"sedentario",       label:"Sedentario",        icon:"🪑", color:"#dc2626", bg:"#fee2e2", activeClass:"active-sed" },
+  { id:"activo",           label:"Activo",             icon:"🚶", color:"#ea580c", bg:"#ffedd5", activeClass:"active-act" },
+  { id:"deportista-medio", label:"Deportista Medio",   icon:"🏃", color:"#2563eb", bg:"#dbeafe", activeClass:"active-med" },
+  { id:"deportista-pro",   label:"Deportista Pro",     icon:"🚴", color:"#7c3aed", bg:"#ede9fe", activeClass:"active-pro" },
+  { id:"elite",            label:"Élite",              icon:"🏆", color:"#059669", bg:"#d1fae5", activeClass:"active-eli" },
+];
+const AGES = ["18-25","26-35","36-45","46-55","56-65","65+"];
+
+let selAge = "all";
+let selCond = "all";
+
+function avg(arr, key) { return arr.length ? Math.round(arr.reduce((s,d) => s+d[key], 0) / arr.length) : 0; }
+function maxV(arr, key) { return arr.length ? Math.max(...arr.map(d=>d[key])) : 0; }
+function minV(arr, key) { return arr.length ? Math.min(...arr.map(d=>d[key])) : 0; }
+function vfcDesc(v) {
+  if (v >= 90) return "Excelente recuperación";
+  if (v >= 65) return "Buena adaptación";
+  if (v >= 40) return "Normal";
+  return "Bajo — revisar estrés/descanso";
+}
+
+function getFiltered() {
+  return DATA.filter(d =>
+    (selAge === "all" || d.age === selAge) &&
+    (selCond === "all" || d.cond === selCond)
+  );
+}
+
+function renderChips() {
+  // Age
+  const ac = document.getElementById("age-chips");
+  ac.innerHTML = "";
+  ["all", ...AGES].forEach(a => {
+    const b = document.createElement("button");
+    b.className = "chip" + (selAge === a ? " active-age" : "");
+    b.textContent = a === "all" ? "Todas" : a;
+    b.onclick = () => { selAge = a; render(); };
+    ac.appendChild(b);
+  });
+  // Cond
+  const cc = document.getElementById("cond-chips");
+  cc.innerHTML = "";
+  const allBtn = document.createElement("button");
+  allBtn.className = "chip" + (selCond === "all" ? " active-age" : "");
+  allBtn.textContent = "Todas";
+  allBtn.onclick = () => { selCond = "all"; render(); };
+  cc.appendChild(allBtn);
+  CONDITIONS.forEach(c => {
+    const b = document.createElement("button");
+    b.className = "chip" + (selCond === c.id ? " " + c.activeClass : "");
+    b.textContent = c.icon + " " + c.label;
+    b.onclick = () => { selCond = c.id; render(); };
+    cc.appendChild(b);
+  });
+}
+
+function renderCards(filtered) {
+  const el = document.getElementById("cards");
+  if (!filtered.length) { el.innerHTML = '<div class="empty">Sin datos para los filtros seleccionados.</div>'; return; }
+
+  const vfc = avg(filtered, "vfc");
+  const cards = [
+    {
+      label: "VFC · Variabilidad F. Cardíaca",
+      html: `<div class="card-value" style="color:#059669">${vfc}<span class="card-unit">ms</span></div>`,
+      sub: vfcDesc(vfc),
+      bar: { val: vfc, max: 140, color: "#059669" },
+    },
+    {
+      label: "VO₂ Máximo / Mínimo",
+      html: `<div class="card-range" style="color:#2563eb">${minV(filtered,"vo2Min")} <span style="color:#94a3b8;font-size:20px">–</span> ${maxV(filtered,"vo2Max")}<span class="card-unit">ml/kg/min</span></div>`,
+      sub: "Rango del grupo seleccionado",
+      bar: null,
+    },
+    {
+      label: "FC Máxima",
+      html: `<div class="card-value" style="color:#ea580c">${maxV(filtered,"hrMax")}<span class="card-unit">lpm</span></div>`,
+      sub: `Rango: ${minV(filtered,"hrMax")} – ${maxV(filtered,"hrMax")} lpm`,
+      bar: { val: maxV(filtered,"hrMax"), max: 220, color: "#ea580c" },
+    },
+    {
+      label: "FC Mínima · Reposo",
+      html: `<div class="card-value" style="color:#7c3aed">${minV(filtered,"hrMin")}<span class="card-unit">lpm</span></div>`,
+      sub: `Rango: ${minV(filtered,"hrMin")} – ${maxV(filtered,"hrMin")} lpm`,
+      bar: { val: maxV(filtered,"hrMin"), max: 100, color: "#7c3aed" },
+    },
+  ];
+
+  el.innerHTML = cards.map(c => `
+    <div class="card">
+      <div class="card-label">${c.label}</div>
+      ${c.html}
+      ${c.bar ? `<div class="bar-bg"><div class="bar-fill" style="width:${Math.round(c.bar.val/c.bar.max*100)}%;background:${c.bar.color}"></div></div>` : ""}
+      <div class="card-sub">${c.sub}</div>
+    </div>
+  `).join("");
+}
+
+function renderTable(filtered) {
+  const tbody = document.getElementById("tbody");
+  const foot = document.getElementById("table-foot");
+  const rows = filtered.length ? filtered : DATA.slice(0, 12);
+
+  tbody.innerHTML = rows.map((row, i) => {
+    const c = CONDITIONS.find(x => x.id === row.cond);
+    return `<tr>
+      <td style="color:#475569;font-weight:600">${row.age}</td>
+      <td><span class="cond-badge" style="background:${c.bg};color:${c.color}">${c.icon} ${c.label}</span></td>
+      <td style="color:#ea580c;font-weight:700">${row.hrMax}</td>
+      <td style="color:#7c3aed;font-weight:700">${row.hrMin}</td>
+      <td style="color:#2563eb;font-weight:700">${row.vo2Max}</td>
+      <td style="color:#0284c7;font-weight:700">${row.vo2Min}</td>
+      <td>
+        <span style="color:#059669;font-weight:700;margin-right:8px">${row.vfc}</span>
+        <span style="display:inline-block;width:60px;height:5px;background:#e2e8f0;border-radius:4px;vertical-align:middle">
+          <span style="display:block;width:${Math.round(row.vfc/130*100)}%;height:100%;background:#059669;border-radius:4px"></span>
+        </span>
+      </td>
+    </tr>`;
+  }).join("");
+
+  if (!filtered.length) {
+    foot.textContent = `Mostrando 12 de ${DATA.length} registros. Aplica un filtro para ver todos.`;
+  } else {
+    foot.textContent = `${filtered.length} registro${filtered.length !== 1 ? "s" : ""} mostrado${filtered.length !== 1 ? "s" : ""}.`;
+  }
+}
+
+function renderBadge(filtered) {
+  const el = document.getElementById("badge");
+  el.innerHTML = `📊 Mostrando <strong>${filtered.length}</strong> registro${filtered.length !== 1 ? "s" : ""} — promedio de los grupos seleccionados`;
+}
+
+function render() {
+  const filtered = getFiltered();
+  renderChips();
+  renderBadge(filtered);
+  renderCards(filtered);
+  renderTable(filtered);
+}
+
+render();
+</script>
+
+<!-- Service Worker registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
