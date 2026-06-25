@@ -13,143 +13,228 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #f0f4ff;
-      --surface: #ffffff;
-      --surface2: #f8faff;
-      --border: #e2e8f0;
-      --text: #0f172a;
-      --text2: #475569;
-      --text3: #94a3b8;
-      --blue: #2563eb;
-      --blue-light: #dbeafe;
-      --green: #059669;
-      --green-light: #d1fae5;
-      --orange: #ea580c;
-      --orange-light: #ffedd5;
-      --purple: #7c3aed;
-      --purple-light: #ede9fe;
+      --bg: #f0f4ff; --surface: #ffffff; --surface2: #f8faff; --border: #e2e8f0;
+      --text: #0f172a; --text2: #475569; --text3: #94a3b8;
+      --blue: #2563eb; --blue-light: #dbeafe;
+      --green: #059669; --green-light: #d1fae5;
+      --orange: #ea580c; --orange-light: #ffedd5;
+      --purple: #7c3aed; --purple-light: #ede9fe;
       --red: #dc2626;
     }
+    body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 60px; }
 
-    body {
-      font-family: 'Barlow', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 0 0 40px 0;
+    /* NAV TABS */
+    .tab-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+      background: var(--surface); border-top: 1px solid var(--border);
+      display: flex; height: 58px;
+      box-shadow: 0 -2px 12px #0f172a10;
     }
+    .tab-btn {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 3px; border: none; background: none; cursor: pointer;
+      font-family: 'Barlow', sans-serif; font-size: 10px; font-weight: 600;
+      color: var(--text3); transition: color .2s; padding: 6px 0;
+    }
+    .tab-btn.active { color: var(--blue); }
+    .tab-btn .tab-icon { font-size: 20px; line-height: 1; }
 
     /* HEADER */
     .header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 18px 20px 14px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 16px 20px 12px; position: sticky; top: 0; z-index: 100;
       box-shadow: 0 1px 12px #2563eb12;
     }
     .header-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
     .header-icon {
-      width: 42px; height: 42px; border-radius: 12px;
+      width: 40px; height: 40px; border-radius: 12px;
       background: linear-gradient(135deg, #2563eb, #7c3aed);
       display: flex; align-items: center; justify-content: center;
-      font-size: 20px; flex-shrink: 0;
-      box-shadow: 0 4px 12px #2563eb33;
+      font-size: 19px; flex-shrink: 0; box-shadow: 0 4px 12px #2563eb33;
     }
-    .header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: 0.3px; }
-    .header-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
+    .header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 21px; font-weight: 800; letter-spacing: 0.3px; }
+    .header-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
 
-    /* MAIN */
-    .main { max-width: 900px; margin: 0 auto; padding: 24px 16px 0; }
+    /* PAGES */
+    .page { display: none; max-width: 900px; margin: 0 auto; padding: 20px 16px 0; }
+    .page.active { display: block; }
 
-    /* FILTERS */
+    /* SECTION LABEL */
     .section-label {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-      color: var(--text3); margin-bottom: 8px; font-weight: 600;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--text3); margin-bottom: 8px; font-weight: 600;
     }
-    .filters { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+
+    /* CONDITION CHIPS */
     .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
     .chip {
       padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
       border: 1.5px solid var(--border); background: var(--surface);
-      color: var(--text2); cursor: pointer; transition: all .2s;
-      font-family: 'Barlow', sans-serif;
+      color: var(--text2); cursor: pointer; transition: all .2s; font-family: 'Barlow', sans-serif;
     }
     .chip:hover { border-color: var(--blue); color: var(--blue); }
-    .chip.active-age { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+    .chip.active-all  { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
     .chip.active-sed  { border-color: #dc2626; background: #fee2e2; color: #dc2626; }
     .chip.active-act  { border-color: #ea580c; background: #ffedd5; color: #ea580c; }
     .chip.active-med  { border-color: #2563eb; background: #dbeafe; color: #2563eb; }
     .chip.active-pro  { border-color: #7c3aed; background: #ede9fe; color: #7c3aed; }
     .chip.active-eli  { border-color: #059669; background: #d1fae5; color: #059669; }
 
-    /* CARDS */
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 28px; }
-    .card {
-      background: var(--surface); border-radius: 16px;
-      border: 1.5px solid var(--border);
-      padding: 18px 20px;
-      box-shadow: 0 2px 8px #0f172a08;
-      transition: box-shadow .2s;
+    /* iOS WHEEL PICKER */
+    .wheel-section { margin-bottom: 20px; }
+    .wheel-wrapper {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 16px; padding: 0; overflow: hidden;
+      box-shadow: 0 2px 8px #0f172a08; position: relative;
     }
-    .card:hover { box-shadow: 0 4px 20px #0f172a14; }
-    .card-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; font-weight: 600; }
-    .card-value { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 800; line-height: 1; }
-    .card-range { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 800; line-height: 1; }
-    .card-unit { font-size: 13px; color: var(--text3); font-weight: 500; margin-left: 4px; }
-    .card-sub { font-size: 12px; color: var(--text3); margin-top: 8px; }
-    .bar-bg { background: var(--bg); border-radius: 6px; height: 6px; margin-top: 10px; overflow: hidden; }
+    .wheel-display {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px; cursor: pointer; user-select: none;
+    }
+    .wheel-display-val {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 800;
+      color: var(--blue);
+    }
+    .wheel-display-label { font-size: 13px; color: var(--text3); }
+    .wheel-display-arrow { font-size: 18px; color: var(--text3); transition: transform .2s; }
+    .wheel-display-arrow.open { transform: rotate(180deg); }
+    .wheel-drum-wrap {
+      max-height: 0; overflow: hidden; transition: max-height .35s ease;
+      border-top: 0px solid var(--border);
+    }
+    .wheel-drum-wrap.open { max-height: 220px; border-top: 1px solid var(--border); }
+    .wheel-drum {
+      height: 210px; overflow-y: scroll; scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 84px 0;
+      position: relative;
+    }
+    .wheel-drum::-webkit-scrollbar { display: none; }
+    .wheel-item {
+      scroll-snap-align: center; height: 42px; display: flex;
+      align-items: center; justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700;
+      color: var(--text3); cursor: pointer; transition: color .15s, font-size .15s;
+    }
+    .wheel-item.selected { color: var(--blue); font-size: 26px; }
+    .wheel-highlight {
+      position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+      height: 42px; background: var(--blue-light); pointer-events: none; border-radius: 8px; margin: 0 12px;
+    }
+
+    /* CARDS */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .card {
+      background: var(--surface); border-radius: 16px; border: 1.5px solid var(--border);
+      padding: 16px 18px; box-shadow: 0 2px 8px #0f172a08; transition: box-shadow .2s;
+    }
+    .card-label { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; font-weight: 600; }
+    .card-value { font-family: 'Barlow Condensed', sans-serif; font-size: 34px; font-weight: 800; line-height: 1; }
+    .card-range { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 800; line-height: 1; }
+    .card-unit { font-size: 12px; color: var(--text3); font-weight: 500; margin-left: 3px; }
+    .card-sub { font-size: 11px; color: var(--text3); margin-top: 7px; }
+    .bar-bg { background: var(--bg); border-radius: 6px; height: 5px; margin-top: 9px; overflow: hidden; }
     .bar-fill { height: 100%; border-radius: 6px; transition: width .5s ease; }
 
-    /* BADGE */
-    .badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 12px; color: var(--text3);
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 8px; padding: 7px 13px; margin-bottom: 18px;
-    }
-
     /* TABLE */
-    .table-wrap {
-      background: var(--surface); border-radius: 16px;
-      border: 1.5px solid var(--border);
-      overflow: hidden;
-      box-shadow: 0 2px 8px #0f172a08;
-    }
-    .table-head {
-      padding: 14px 20px; border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .table-head-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.3px; }
+    .table-wrap { background: var(--surface); border-radius: 16px; border: 1.5px solid var(--border); overflow: hidden; box-shadow: 0 2px 8px #0f172a08; margin-bottom: 20px; }
+    .table-head { padding: 13px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .table-head-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; }
     .table-head-sub { font-size: 11px; color: var(--text3); }
     .scroll-x { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     thead tr { background: var(--surface2); }
-    th { padding: 10px 16px; text-align: left; color: var(--text3); font-weight: 600; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Barlow Condensed', sans-serif; white-space: nowrap; }
+    th { padding: 9px 14px; text-align: left; color: var(--text3); font-weight: 600; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Barlow Condensed', sans-serif; white-space: nowrap; }
     tbody tr { border-top: 1px solid var(--border); }
     tbody tr:hover { background: var(--surface2); }
-    td { padding: 10px 16px; white-space: nowrap; }
-    .cond-badge {
-      padding: 3px 10px; border-radius: 20px; font-size: 11px;
-      font-weight: 700; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.5px;
+    td { padding: 9px 14px; white-space: nowrap; }
+    .cond-badge { padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; font-family: 'Barlow Condensed', sans-serif; }
+    .table-foot { padding: 8px 18px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text3); }
+
+    /* COMPARATIVA */
+    .comp-section { margin-bottom: 20px; }
+    .comp-card {
+      background: var(--surface); border-radius: 16px; border: 1.5px solid var(--border);
+      padding: 18px 20px; box-shadow: 0 2px 8px #0f172a08; margin-bottom: 14px;
     }
-    .table-foot { padding: 9px 20px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text3); }
+    .comp-title { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; }
+    .comp-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .comp-row:last-child { margin-bottom: 0; }
+    .comp-metric-name { font-size: 12px; color: var(--text2); font-weight: 600; width: 110px; flex-shrink: 0; }
+    .comp-bars { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .comp-bar-row { display: flex; align-items: center; gap: 6px; }
+    .comp-bar-label { font-size: 10px; color: var(--text3); width: 32px; text-align: right; flex-shrink: 0; }
+    .comp-bar-track { flex: 1; height: 8px; background: var(--bg); border-radius: 10px; overflow: hidden; }
+    .comp-bar-fill { height: 100%; border-radius: 10px; transition: width .6s ease; }
+    .comp-bar-val { font-size: 11px; font-weight: 700; width: 34px; flex-shrink: 0; }
+    .comp-input-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .comp-input {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700;
+      width: 80px; padding: 8px 12px; border: 1.5px solid var(--border);
+      border-radius: 10px; background: var(--surface2); color: var(--text);
+      text-align: center; outline: none; -moz-appearance: textfield;
+    }
+    .comp-input:focus { border-color: var(--blue); }
+    .comp-input::-webkit-inner-spin-button, .comp-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .comp-input-label { font-size: 12px; color: var(--text3); }
+    .comp-status {
+      display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
+      border-radius: 20px; font-size: 12px; font-weight: 700;
+    }
+    .comp-status.above { background: var(--green-light); color: var(--green); }
+    .comp-status.below { background: #fee2e2; color: var(--red); }
+    .comp-status.within { background: var(--blue-light); color: var(--blue); }
+    .no-profile {
+      text-align: center; padding: 30px 20px; color: var(--text3); font-size: 14px;
+      background: var(--surface); border-radius: 16px; border: 1.5px dashed var(--border);
+    }
+
+    /* GLOSARIO */
+    .gloss-item {
+      background: var(--surface); border-radius: 14px; border: 1.5px solid var(--border);
+      margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 4px #0f172a06;
+    }
+    .gloss-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; cursor: pointer; user-select: none;
+    }
+    .gloss-header-left { display: flex; align-items: center; gap: 12px; }
+    .gloss-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0;
+    }
+    .gloss-name { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 800; }
+    .gloss-abbr { font-size: 11px; color: var(--text3); font-weight: 500; margin-top: 1px; }
+    .gloss-arrow { font-size: 14px; color: var(--text3); transition: transform .2s; }
+    .gloss-arrow.open { transform: rotate(180deg); }
+    .gloss-body { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+    .gloss-body.open { max-height: 600px; }
+    .gloss-content { padding: 0 18px 16px; }
+    .gloss-desc { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 12px; }
+    .gloss-ranges { display: flex; flex-direction: column; gap: 6px; }
+    .gloss-range-row { display: flex; align-items: center; gap: 8px; }
+    .gloss-range-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .gloss-range-label { font-size: 12px; color: var(--text2); flex: 1; }
+    .gloss-range-val { font-size: 12px; font-weight: 700; color: var(--text); }
+    .gloss-tip { margin-top: 12px; padding: 10px 13px; background: var(--bg); border-radius: 10px; font-size: 12px; color: var(--text2); border-left: 3px solid var(--blue); line-height: 1.5; }
 
     /* LEGEND */
-    .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 22px; }
-    .legend-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text3); max-width: 260px; }
-    .legend-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 3px; flex-shrink: 0; }
+    .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+    .legend-item { display: flex; align-items: flex-start; gap: 7px; font-size: 11px; color: var(--text3); max-width: 250px; }
+    .legend-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 3px; flex-shrink: 0; }
 
-    /* EMPTY */
-    .empty { padding: 40px; text-align: center; color: var(--text3); }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text3);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 6px 12px; margin-bottom: 16px;
+    }
+    .empty { padding: 36px; text-align: center; color: var(--text3); }
 
     @media (max-width: 480px) {
       .header-title { font-size: 18px; }
-      .card-value, .card-range { font-size: 28px; }
+      .card-value { font-size: 28px; }
+      .card-range { font-size: 22px; }
     }
   </style>
 </head>
@@ -160,17 +245,49 @@
     <div class="header-icon">❤️</div>
     <div>
       <div class="header-title">Cardio Metrics Pro</div>
-      <div class="header-sub">VFC · VO₂ · Frecuencia Cardíaca · Filtros por edad y condición</div>
+      <div class="header-sub">VFC · VO₂ · Frecuencia Cardíaca</div>
     </div>
   </div>
 </header>
 
-<main class="main">
-  <div class="filters">
-    <div>
-      <div class="section-label">Grupo de edad</div>
-      <div class="filter-chips" id="age-chips"></div>
+<!-- TAB BAR -->
+<nav class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('referencias')" id="tab-referencias">
+    <span class="tab-icon">📊</span>Referencias
+  </button>
+  <button class="tab-btn" onclick="showTab('comparativa')" id="tab-comparativa">
+    <span class="tab-icon">⚖️</span>Mi Perfil
+  </button>
+  <button class="tab-btn" onclick="showTab('glosario')" id="tab-glosario">
+    <span class="tab-icon">📖</span>Glosario
+  </button>
+</nav>
+
+<!-- PAGE: REFERENCIAS -->
+<div class="page active" id="page-referencias">
+
+  <div style="margin-bottom:18px">
+    <!-- AGE WHEEL -->
+    <div class="wheel-section">
+      <div class="section-label">Tu edad</div>
+      <div class="wheel-wrapper">
+        <div class="wheel-display" onclick="toggleWheel()">
+          <div>
+            <div class="wheel-display-label">Edad seleccionada</div>
+            <div class="wheel-display-val" id="wheel-display-val">Todas las edades</div>
+          </div>
+          <div class="wheel-display-arrow" id="wheel-arrow">▼</div>
+        </div>
+        <div class="wheel-drum-wrap" id="wheel-drum-wrap">
+          <div style="position:relative">
+            <div class="wheel-highlight"></div>
+            <div class="wheel-drum" id="wheel-drum"></div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- CONDITION CHIPS -->
     <div>
       <div class="section-label">Condición física</div>
       <div class="filter-chips" id="cond-chips"></div>
@@ -178,20 +295,18 @@
   </div>
 
   <div class="badge" id="badge">📊 Cargando...</div>
-
   <div class="cards" id="cards"></div>
 
   <div class="table-wrap">
     <div class="table-head">
       <span class="table-head-title">Tabla de Referencia</span>
-      <span class="table-head-sub">Valores basados en literatura científica</span>
+      <span class="table-head-sub">Literatura científica</span>
     </div>
     <div class="scroll-x">
       <table>
         <thead>
           <tr>
-            <th>Edad</th><th>Condición</th><th>FC Máx (lpm)</th>
-            <th>FC Mín (lpm)</th><th>VO₂ Máx</th><th>VO₂ Mín</th><th>VFC (ms)</th>
+            <th>Edad</th><th>Condición</th><th>FC Máx</th><th>FC Mín</th><th>VO₂ Máx</th><th>VO₂ Mín</th><th>VFC (ms)</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -201,151 +316,424 @@
   </div>
 
   <div class="legend">
-    <div class="legend-item"><span class="legend-dot" style="background:#059669"></span><span><strong style="color:#059669">VFC</strong>: Variabilidad de la Frecuencia Cardíaca — indicador de recuperación y estrés autonómico.</span></div>
-    <div class="legend-item"><span class="legend-dot" style="background:#2563eb"></span><span><strong style="color:#2563eb">VO₂</strong>: Consumo máximo de oxígeno — indicador de capacidad aeróbica.</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:#059669"></span><span><strong style="color:#059669">VFC</strong>: Variabilidad de la FC — indicador de recuperación y estrés autonómico.</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:#2563eb"></span><span><strong style="color:#2563eb">VO₂</strong>: Consumo máximo de oxígeno — capacidad aeróbica.</span></div>
     <div class="legend-item"><span class="legend-dot" style="background:#ea580c"></span><span><strong style="color:#ea580c">FC</strong>: Frecuencia cardíaca en latidos por minuto.</span></div>
   </div>
-</main>
+</div>
+
+<!-- PAGE: COMPARATIVA -->
+<div class="page" id="page-comparativa">
+  <div style="margin-bottom:18px">
+    <div class="section-label">Introduce tus datos personales</div>
+    <div class="comp-card">
+      <div class="comp-input-row">
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Edad</div>
+          <input class="comp-input" type="number" id="my-age" min="18" max="90" placeholder="35" />
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">FC Reposo (lpm)</div>
+          <input class="comp-input" type="number" id="my-hr-rest" min="30" max="120" placeholder="60" />
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">FC Máx (lpm)</div>
+          <input class="comp-input" type="number" id="my-hr-max" min="100" max="230" placeholder="185" />
+        </div>
+      </div>
+      <div class="comp-input-row">
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">VO₂ Máx</div>
+          <input class="comp-input" type="number" id="my-vo2" min="10" max="100" placeholder="50" />
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">VFC (ms)</div>
+          <input class="comp-input" type="number" id="my-vfc" min="10" max="200" placeholder="65" />
+        </div>
+        <div style="display:flex;align-items:flex-end">
+          <button onclick="runComparativa()" style="
+            padding:10px 18px; border-radius:12px; border:none;
+            background:var(--blue); color:white; font-family:'Barlow Condensed',sans-serif;
+            font-size:16px; font-weight:700; cursor:pointer; letter-spacing:0.5px;
+          ">Comparar</button>
+        </div>
+      </div>
+    </div>
+    <div class="section-label">Condición física de referencia</div>
+    <div class="filter-chips" id="comp-cond-chips" style="margin-bottom:18px"></div>
+  </div>
+  <div id="comp-result"></div>
+</div>
+
+<!-- PAGE: GLOSARIO -->
+<div class="page" id="page-glosario">
+  <div id="glosario-list"></div>
+</div>
 
 <script>
+// ─── DATA — puntos de anclaje por edad exacta ────────────────────────────
+// Cada condición tiene valores en edades clave; la interpolación calcula
+// el valor exacto para cualquier edad entre 18 y 90.
+const ANCHORS = {
+  "sedentario": [
+    { age:18, hrMax:200, hrMin:60, vo2Max:40, vo2Min:29, vfc:44 },
+    { age:25, hrMax:197, hrMin:62, vo2Max:38, vo2Min:28, vfc:42 },
+    { age:35, hrMax:187, hrMin:65, vo2Max:35, vo2Min:25, vfc:38 },
+    { age:45, hrMax:177, hrMin:68, vo2Max:31, vo2Min:22, vfc:33 },
+    { age:55, hrMax:167, hrMin:70, vo2Max:27, vo2Min:18, vfc:28 },
+    { age:65, hrMax:157, hrMin:72, vo2Max:23, vo2Min:15, vfc:22 },
+    { age:75, hrMax:148, hrMin:74, vo2Max:19, vo2Min:12, vfc:18 },
+    { age:90, hrMax:138, hrMin:76, vo2Max:15, vo2Min:10, vfc:14 },
+  ],
+  "activo": [
+    { age:18, hrMax:203, hrMin:52, vo2Max:50, vo2Min:40, vfc:61 },
+    { age:25, hrMax:200, hrMin:55, vo2Max:48, vo2Min:38, vfc:58 },
+    { age:35, hrMax:190, hrMin:57, vo2Max:45, vo2Min:35, vfc:54 },
+    { age:45, hrMax:180, hrMin:59, vo2Max:41, vo2Min:31, vfc:49 },
+    { age:55, hrMax:170, hrMin:62, vo2Max:37, vo2Min:27, vfc:43 },
+    { age:65, hrMax:160, hrMin:64, vo2Max:32, vo2Min:23, vfc:37 },
+    { age:75, hrMax:151, hrMin:66, vo2Max:27, vo2Min:19, vfc:31 },
+    { age:90, hrMax:140, hrMin:68, vo2Max:22, vo2Min:15, vfc:25 },
+  ],
+  "deportista-medio": [
+    { age:18, hrMax:205, hrMin:45, vo2Max:58, vo2Min:48, vfc:75 },
+    { age:25, hrMax:202, hrMin:48, vo2Max:56, vo2Min:46, vfc:72 },
+    { age:35, hrMax:192, hrMin:50, vo2Max:53, vo2Min:43, vfc:68 },
+    { age:45, hrMax:182, hrMin:52, vo2Max:49, vo2Min:39, vfc:62 },
+    { age:55, hrMax:172, hrMin:54, vo2Max:44, vo2Min:34, vfc:55 },
+    { age:65, hrMax:162, hrMin:56, vo2Max:39, vo2Min:29, vfc:48 },
+    { age:75, hrMax:153, hrMin:58, vo2Max:33, vo2Min:24, vfc:40 },
+    { age:90, hrMax:142, hrMin:60, vo2Max:27, vo2Min:19, vfc:32 },
+  ],
+  "deportista-pro": [
+    { age:18, hrMax:208, hrMin:35, vo2Max:75, vo2Min:63, vfc:102 },
+    { age:25, hrMax:205, hrMin:38, vo2Max:72, vo2Min:60, vfc:98 },
+    { age:35, hrMax:195, hrMin:40, vo2Max:68, vo2Min:56, vfc:92 },
+    { age:45, hrMax:185, hrMin:42, vo2Max:63, vo2Min:51, vfc:85 },
+    { age:55, hrMax:175, hrMin:44, vo2Max:57, vo2Min:45, vfc:76 },
+    { age:65, hrMax:165, hrMin:46, vo2Max:50, vo2Min:39, vfc:66 },
+    { age:75, hrMax:156, hrMin:48, vo2Max:43, vo2Min:33, vfc:56 },
+    { age:90, hrMax:144, hrMin:51, vo2Max:35, vo2Min:26, vfc:45 },
+  ],
+  "elite": [
+    { age:18, hrMax:210, hrMin:29, vo2Max:88, vo2Min:75, vfc:122 },
+    { age:25, hrMax:207, hrMin:32, vo2Max:85, vo2Min:72, vfc:118 },
+    { age:35, hrMax:197, hrMin:34, vo2Max:80, vo2Min:67, vfc:110 },
+    { age:45, hrMax:187, hrMin:36, vo2Max:74, vo2Min:61, vfc:101 },
+    { age:55, hrMax:177, hrMin:38, vo2Max:67, vo2Min:54, vfc:90 },
+    { age:65, hrMax:167, hrMin:40, vo2Max:59, vo2Min:47, vfc:78 },
+    { age:75, hrMax:158, hrMin:42, vo2Max:51, vo2Min:40, vfc:66 },
+    { age:90, hrMax:146, hrMin:45, vo2Max:42, vo2Min:32, vfc:54 },
+  ],
+};
+
+// Interpola linealmente entre dos puntos de anclaje para una edad exacta
+function interpolate(cond, age) {
+  const pts = ANCHORS[cond];
+  if (!pts) return null;
+  const clampedAge = Math.max(18, Math.min(90, age));
+  // Buscar los dos puntos que encuadran la edad
+  let lo = pts[0], hi = pts[pts.length - 1];
+  for (let i = 0; i < pts.length - 1; i++) {
+    if (clampedAge >= pts[i].age && clampedAge <= pts[i+1].age) {
+      lo = pts[i]; hi = pts[i+1]; break;
+    }
+  }
+  if (lo.age === hi.age) return lo;
+  const t = (clampedAge - lo.age) / (hi.age - lo.age);
+  const lerp = (a, b) => Math.round(a + (b - a) * t);
+  return {
+    age: clampedAge,
+    hrMax:  lerp(lo.hrMax,  hi.hrMax),
+    hrMin:  lerp(lo.hrMin,  hi.hrMin),
+    vo2Max: lerp(lo.vo2Max, hi.vo2Max),
+    vo2Min: lerp(lo.vo2Min, hi.vo2Min),
+    vfc:    lerp(lo.vfc,    hi.vfc),
+  };
+}
+
+// DATA legacy para la tabla de referencia (grupos, para mostrar rangos orientativos)
 const DATA = [
-  { age:"18-25", cond:"sedentario", hrMax:197, hrMin:62, vo2Max:38, vo2Min:28, vfc:42 },
-  { age:"26-35", cond:"sedentario", hrMax:187, hrMin:65, vo2Max:35, vo2Min:25, vfc:38 },
-  { age:"36-45", cond:"sedentario", hrMax:177, hrMin:68, vo2Max:31, vo2Min:22, vfc:33 },
-  { age:"46-55", cond:"sedentario", hrMax:167, hrMin:70, vo2Max:27, vo2Min:18, vfc:28 },
-  { age:"56-65", cond:"sedentario", hrMax:157, hrMin:72, vo2Max:23, vo2Min:15, vfc:22 },
-  { age:"65+",   cond:"sedentario", hrMax:148, hrMin:74, vo2Max:19, vo2Min:12, vfc:18 },
-  { age:"18-25", cond:"activo", hrMax:200, hrMin:55, vo2Max:48, vo2Min:38, vfc:58 },
-  { age:"26-35", cond:"activo", hrMax:190, hrMin:57, vo2Max:45, vo2Min:35, vfc:54 },
-  { age:"36-45", cond:"activo", hrMax:180, hrMin:59, vo2Max:41, vo2Min:31, vfc:49 },
-  { age:"46-55", cond:"activo", hrMax:170, hrMin:62, vo2Max:37, vo2Min:27, vfc:43 },
-  { age:"56-65", cond:"activo", hrMax:160, hrMin:64, vo2Max:32, vo2Min:23, vfc:37 },
-  { age:"65+",   cond:"activo", hrMax:151, hrMin:66, vo2Max:27, vo2Min:19, vfc:31 },
+  { age:"18-25", cond:"sedentario",       hrMax:197, hrMin:62, vo2Max:38, vo2Min:28, vfc:42 },
+  { age:"26-35", cond:"sedentario",       hrMax:187, hrMin:65, vo2Max:35, vo2Min:25, vfc:38 },
+  { age:"36-45", cond:"sedentario",       hrMax:177, hrMin:68, vo2Max:31, vo2Min:22, vfc:33 },
+  { age:"46-55", cond:"sedentario",       hrMax:167, hrMin:70, vo2Max:27, vo2Min:18, vfc:28 },
+  { age:"56-65", cond:"sedentario",       hrMax:157, hrMin:72, vo2Max:23, vo2Min:15, vfc:22 },
+  { age:"65+",   cond:"sedentario",       hrMax:148, hrMin:74, vo2Max:19, vo2Min:12, vfc:18 },
+  { age:"18-25", cond:"activo",           hrMax:200, hrMin:55, vo2Max:48, vo2Min:38, vfc:58 },
+  { age:"26-35", cond:"activo",           hrMax:190, hrMin:57, vo2Max:45, vo2Min:35, vfc:54 },
+  { age:"36-45", cond:"activo",           hrMax:180, hrMin:59, vo2Max:41, vo2Min:31, vfc:49 },
+  { age:"46-55", cond:"activo",           hrMax:170, hrMin:62, vo2Max:37, vo2Min:27, vfc:43 },
+  { age:"56-65", cond:"activo",           hrMax:160, hrMin:64, vo2Max:32, vo2Min:23, vfc:37 },
+  { age:"65+",   cond:"activo",           hrMax:151, hrMin:66, vo2Max:27, vo2Min:19, vfc:31 },
   { age:"18-25", cond:"deportista-medio", hrMax:202, hrMin:48, vo2Max:56, vo2Min:46, vfc:72 },
   { age:"26-35", cond:"deportista-medio", hrMax:192, hrMin:50, vo2Max:53, vo2Min:43, vfc:68 },
   { age:"36-45", cond:"deportista-medio", hrMax:182, hrMin:52, vo2Max:49, vo2Min:39, vfc:62 },
   { age:"46-55", cond:"deportista-medio", hrMax:172, hrMin:54, vo2Max:44, vo2Min:34, vfc:55 },
   { age:"56-65", cond:"deportista-medio", hrMax:162, hrMin:56, vo2Max:39, vo2Min:29, vfc:48 },
   { age:"65+",   cond:"deportista-medio", hrMax:153, hrMin:58, vo2Max:33, vo2Min:24, vfc:40 },
-  { age:"18-25", cond:"deportista-pro", hrMax:205, hrMin:38, vo2Max:72, vo2Min:60, vfc:98 },
-  { age:"26-35", cond:"deportista-pro", hrMax:195, hrMin:40, vo2Max:68, vo2Min:56, vfc:92 },
-  { age:"36-45", cond:"deportista-pro", hrMax:185, hrMin:42, vo2Max:63, vo2Min:51, vfc:85 },
-  { age:"46-55", cond:"deportista-pro", hrMax:175, hrMin:44, vo2Max:57, vo2Min:45, vfc:76 },
-  { age:"56-65", cond:"deportista-pro", hrMax:165, hrMin:46, vo2Max:50, vo2Min:39, vfc:66 },
-  { age:"65+",   cond:"deportista-pro", hrMax:156, hrMin:48, vo2Max:43, vo2Min:33, vfc:56 },
-  { age:"18-25", cond:"elite", hrMax:207, hrMin:32, vo2Max:85, vo2Min:72, vfc:118 },
-  { age:"26-35", cond:"elite", hrMax:197, hrMin:34, vo2Max:80, vo2Min:67, vfc:110 },
-  { age:"36-45", cond:"elite", hrMax:187, hrMin:36, vo2Max:74, vo2Min:61, vfc:101 },
-  { age:"46-55", cond:"elite", hrMax:177, hrMin:38, vo2Max:67, vo2Min:54, vfc:90 },
-  { age:"56-65", cond:"elite", hrMax:167, hrMin:40, vo2Max:59, vo2Min:47, vfc:78 },
-  { age:"65+",   cond:"elite", hrMax:158, hrMin:42, vo2Max:51, vo2Min:40, vfc:66 },
+  { age:"18-25", cond:"deportista-pro",   hrMax:205, hrMin:38, vo2Max:72, vo2Min:60, vfc:98 },
+  { age:"26-35", cond:"deportista-pro",   hrMax:195, hrMin:40, vo2Max:68, vo2Min:56, vfc:92 },
+  { age:"36-45", cond:"deportista-pro",   hrMax:185, hrMin:42, vo2Max:63, vo2Min:51, vfc:85 },
+  { age:"46-55", cond:"deportista-pro",   hrMax:175, hrMin:44, vo2Max:57, vo2Min:45, vfc:76 },
+  { age:"56-65", cond:"deportista-pro",   hrMax:165, hrMin:46, vo2Max:50, vo2Min:39, vfc:66 },
+  { age:"65+",   cond:"deportista-pro",   hrMax:156, hrMin:48, vo2Max:43, vo2Min:33, vfc:56 },
+  { age:"18-25", cond:"elite",            hrMax:207, hrMin:32, vo2Max:85, vo2Min:72, vfc:118 },
+  { age:"26-35", cond:"elite",            hrMax:197, hrMin:34, vo2Max:80, vo2Min:67, vfc:110 },
+  { age:"36-45", cond:"elite",            hrMax:187, hrMin:36, vo2Max:74, vo2Min:61, vfc:101 },
+  { age:"46-55", cond:"elite",            hrMax:177, hrMin:38, vo2Max:67, vo2Min:54, vfc:90 },
+  { age:"56-65", cond:"elite",            hrMax:167, hrMin:40, vo2Max:59, vo2Min:47, vfc:78 },
+  { age:"65+",   cond:"elite",            hrMax:158, hrMin:42, vo2Max:51, vo2Min:40, vfc:66 },
 ];
 
 const CONDITIONS = [
-  { id:"sedentario",       label:"Sedentario",        icon:"🪑", color:"#dc2626", bg:"#fee2e2", activeClass:"active-sed" },
-  { id:"activo",           label:"Activo",             icon:"🚶", color:"#ea580c", bg:"#ffedd5", activeClass:"active-act" },
-  { id:"deportista-medio", label:"Deportista Medio",   icon:"🏃", color:"#2563eb", bg:"#dbeafe", activeClass:"active-med" },
-  { id:"deportista-pro",   label:"Deportista Pro",     icon:"🚴", color:"#7c3aed", bg:"#ede9fe", activeClass:"active-pro" },
-  { id:"elite",            label:"Élite",              icon:"🏆", color:"#059669", bg:"#d1fae5", activeClass:"active-eli" },
+  { id:"sedentario",       label:"Sedentario",      icon:"🪑", color:"#dc2626", bg:"#fee2e2", activeClass:"active-sed" },
+  { id:"activo",           label:"Activo",           icon:"🚶", color:"#ea580c", bg:"#ffedd5", activeClass:"active-act" },
+  { id:"deportista-medio", label:"Dep. Medio",       icon:"🏃", color:"#2563eb", bg:"#dbeafe", activeClass:"active-med" },
+  { id:"deportista-pro",   label:"Dep. Pro",         icon:"🚴", color:"#7c3aed", bg:"#ede9fe", activeClass:"active-pro" },
+  { id:"elite",            label:"Élite",            icon:"🏆", color:"#059669", bg:"#d1fae5", activeClass:"active-eli" },
 ];
-const AGES = ["18-25","26-35","36-45","46-55","56-65","65+"];
 
-let selAge = "all";
+const GLOSSARY = [
+  {
+    key:"vfc", name:"VFC", full:"Variabilidad de la Frecuencia Cardíaca",
+    icon:"💚", color:"#059669", bg:"#d1fae5",
+    desc:"La VFC mide la variación en milisegundos entre latidos consecutivos. Una VFC alta indica que el sistema nervioso autónomo está bien equilibrado y el cuerpo se recupera bien del entrenamiento. Una VFC baja puede indicar fatiga acumulada, estrés o sobreentrenamiento.",
+    ranges:[
+      { label:"Élite / Pro", val:">90 ms", color:"#059669" },
+      { label:"Deportista activo", val:"55–90 ms", color:"#2563eb" },
+      { label:"Normal", val:"30–55 ms", color:"#ea580c" },
+      { label:"Bajo", val:"<30 ms", color:"#dc2626" },
+    ],
+    tip:"Mide tu VFC siempre en las mismas condiciones: en reposo, por la mañana, antes de levantarte."
+  },
+  {
+    key:"vo2", name:"VO₂ Máx", full:"Consumo Máximo de Oxígeno",
+    icon:"💨", color:"#2563eb", bg:"#dbeafe",
+    desc:"El VO₂ máximo es la cantidad máxima de oxígeno que tu cuerpo puede utilizar durante el ejercicio intenso. Es el indicador más importante de capacidad cardiovascular y aeróbica. Se expresa en mililitros de O₂ por kilogramo de peso por minuto (ml/kg/min).",
+    ranges:[
+      { label:"Élite (hombre)", val:">60 ml/kg/min", color:"#059669" },
+      { label:"Deportista pro", val:"50–60 ml/kg/min", color:"#2563eb" },
+      { label:"Activo", val:"40–50 ml/kg/min", color:"#ea580c" },
+      { label:"Sedentario", val:"<40 ml/kg/min", color:"#dc2626" },
+    ],
+    tip:"El VO₂ máximo mejora con entrenamiento de intervalos de alta intensidad (HIIT) y ejercicio de resistencia sostenido."
+  },
+  {
+    key:"hrmax", name:"FC Máxima", full:"Frecuencia Cardíaca Máxima",
+    icon:"🔴", color:"#ea580c", bg:"#ffedd5",
+    desc:"La FC máxima es el número máximo de latidos por minuto que tu corazón puede alcanzar durante el esfuerzo máximo. Se usa como referencia para calcular zonas de entrenamiento. Disminuye con la edad aproximadamente 1 lpm por año.",
+    ranges:[
+      { label:"Fórmula estándar", val:"220 − edad", color:"#ea580c" },
+      { label:"Fórmula Tanaka", val:"208 − (0.7 × edad)", color:"#2563eb" },
+      { label:"Deportistas", val:"Puede ser 5–15 lpm más alta", color:"#059669" },
+    ],
+    tip:"La FC máxima real solo se alcanza en test de esfuerzo máximo. Las fórmulas son estimaciones."
+  },
+  {
+    key:"hrmin", name:"FC Mínima", full:"Frecuencia Cardíaca en Reposo",
+    icon:"💜", color:"#7c3aed", bg:"#ede9fe",
+    desc:"La FC en reposo (o basal) es el número de latidos por minuto cuando estás completamente en reposo, idealmente al despertar. Es uno de los indicadores más simples de salud cardiovascular: cuanto más baja, más eficiente es tu corazón.",
+    ranges:[
+      { label:"Atleta de élite", val:"32–45 lpm", color:"#059669" },
+      { label:"Deportista activo", val:"45–60 lpm", color:"#2563eb" },
+      { label:"Normal", val:"60–75 lpm", color:"#ea580c" },
+      { label:"Alta (revisar)", val:">80 lpm", color:"#dc2626" },
+    ],
+    tip:"Si tu FC en reposo sube varios días seguidos, puede ser señal de fatiga, enfermedad o sobreentrenamiento."
+  },
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────
+let selAge = null; // null = todas
 let selCond = "all";
+let compCond = "deportista-medio";
+let wheelOpen = false;
+const AGES = Array.from({length:73}, (_,i) => 18+i); // 18–90
 
-function avg(arr, key) { return arr.length ? Math.round(arr.reduce((s,d) => s+d[key], 0) / arr.length) : 0; }
+// ─── TABS ────────────────────────────────────────────────────────────────
+function showTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ─── WHEEL ───────────────────────────────────────────────────────────────
+function buildWheel() {
+  const drum = document.getElementById('wheel-drum');
+  // "Todas" option
+  const allItem = document.createElement('div');
+  allItem.className = 'wheel-item' + (selAge === null ? ' selected' : '');
+  allItem.textContent = 'Todas';
+  allItem.dataset.val = 'all';
+  drum.appendChild(allItem);
+
+  AGES.forEach(a => {
+    const el = document.createElement('div');
+    el.className = 'wheel-item' + (selAge === a ? ' selected' : '');
+    el.textContent = a + ' años';
+    el.dataset.val = a;
+    drum.appendChild(el);
+  });
+
+  let scrollTimer;
+  drum.addEventListener('scroll', () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => snapWheel(), 80);
+  });
+}
+
+function snapWheel() {
+  const drum = document.getElementById('wheel-drum');
+  const itemH = 42;
+  const idx = Math.round(drum.scrollTop / itemH);
+  drum.scrollTo({ top: idx * itemH, behavior: 'smooth' });
+  setTimeout(() => {
+    const items = drum.querySelectorAll('.wheel-item');
+    items.forEach(i => i.classList.remove('selected'));
+    const chosen = items[idx];
+    if (chosen) {
+      chosen.classList.add('selected');
+      const val = chosen.dataset.val;
+      selAge = val === 'all' ? null : parseInt(val);
+      const disp = document.getElementById('wheel-display-val');
+      disp.textContent = val === 'all' ? 'Todas las edades' : val + ' años';
+      render();
+    }
+  }, 120);
+}
+
+function toggleWheel() {
+  wheelOpen = !wheelOpen;
+  const wrap = document.getElementById('wheel-drum-wrap');
+  const arrow = document.getElementById('wheel-arrow');
+  wrap.classList.toggle('open', wheelOpen);
+  arrow.classList.toggle('open', wheelOpen);
+  if (wheelOpen) {
+    const drum = document.getElementById('wheel-drum');
+    const idx = selAge === null ? 0 : AGES.indexOf(selAge) + 1;
+    setTimeout(() => drum.scrollTo({ top: idx * 42, behavior: 'instant' }), 50);
+  }
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────
+function ageGroup(age) {
+  if (age === null) return null;
+  if (age <= 25) return "18-25";
+  if (age <= 35) return "26-35";
+  if (age <= 45) return "36-45";
+  if (age <= 55) return "46-55";
+  if (age <= 65) return "56-65";
+  return "65+";
+}
+function avg(arr, key) { return arr.length ? Math.round(arr.reduce((s,d)=>s+d[key],0)/arr.length) : 0; }
 function maxV(arr, key) { return arr.length ? Math.max(...arr.map(d=>d[key])) : 0; }
 function minV(arr, key) { return arr.length ? Math.min(...arr.map(d=>d[key])) : 0; }
 function vfcDesc(v) {
-  if (v >= 90) return "Excelente recuperación";
-  if (v >= 65) return "Buena adaptación";
-  if (v >= 40) return "Normal";
+  if (v>=90) return "Excelente recuperación";
+  if (v>=65) return "Buena adaptación";
+  if (v>=40) return "Normal";
   return "Bajo — revisar estrés/descanso";
 }
 
 function getFiltered() {
+  const group = ageGroup(selAge);
   return DATA.filter(d =>
-    (selAge === "all" || d.age === selAge) &&
+    (group === null || d.age === group) &&
     (selCond === "all" || d.cond === selCond)
   );
 }
 
-function renderChips() {
-  // Age
-  const ac = document.getElementById("age-chips");
-  ac.innerHTML = "";
-  ["all", ...AGES].forEach(a => {
-    const b = document.createElement("button");
-    b.className = "chip" + (selAge === a ? " active-age" : "");
-    b.textContent = a === "all" ? "Todas" : a;
-    b.onclick = () => { selAge = a; render(); };
-    ac.appendChild(b);
-  });
-  // Cond
-  const cc = document.getElementById("cond-chips");
+// ─── RENDER CHIPS ────────────────────────────────────────────────────────
+function renderCondChips(containerId, currentVal, setter) {
+  const cc = document.getElementById(containerId);
   cc.innerHTML = "";
   const allBtn = document.createElement("button");
-  allBtn.className = "chip" + (selCond === "all" ? " active-age" : "");
+  allBtn.className = "chip" + (currentVal === "all" ? " active-all" : "");
   allBtn.textContent = "Todas";
-  allBtn.onclick = () => { selCond = "all"; render(); };
+  allBtn.onclick = () => { setter("all"); render(); };
   cc.appendChild(allBtn);
   CONDITIONS.forEach(c => {
     const b = document.createElement("button");
-    b.className = "chip" + (selCond === c.id ? " " + c.activeClass : "");
+    b.className = "chip" + (currentVal === c.id ? " " + c.activeClass : "");
     b.textContent = c.icon + " " + c.label;
-    b.onclick = () => { selCond = c.id; render(); };
+    b.onclick = () => { setter(c.id); render(); };
     cc.appendChild(b);
   });
 }
 
+// ─── RENDER CARDS ────────────────────────────────────────────────────────
 function renderCards(filtered) {
   const el = document.getElementById("cards");
-  if (!filtered.length) { el.innerHTML = '<div class="empty">Sin datos para los filtros seleccionados.</div>'; return; }
 
+  // Si hay edad exacta: usar interpolación
+  if (selAge !== null) {
+    const conds = selCond === "all" ? CONDITIONS.map(c=>c.id) : [selCond];
+    const rows = conds.map(c => ({ cond: c, ...interpolate(c, selAge) }));
+
+    // Si hay una sola condición → mostrar valores exactos con etiqueta "exacto"
+    if (rows.length === 1) {
+      const r = rows[0];
+      const cond = CONDITIONS.find(c => c.id === r.cond);
+      const cards = [
+        { label:"VFC · Variabilidad FC", html:`<div class="card-value" style="color:#059669">${r.vfc}<span class="card-unit">ms</span></div>`, sub:vfcDesc(r.vfc), bar:{val:r.vfc,max:140,color:"#059669"} },
+        { label:"VO₂ Máx / VO₂ Mín", html:`<div class="card-range" style="color:#2563eb">${r.vo2Min} <span style="color:#94a3b8;font-size:16px">–</span> ${r.vo2Max}<span class="card-unit">ml/kg/min</span></div>`, sub:`Valores exactos para ${selAge} años`, bar:null },
+        { label:"FC Máxima", html:`<div class="card-value" style="color:#ea580c">${r.hrMax}<span class="card-unit">lpm</span></div>`, sub:`Exacto para ${selAge} años · ${cond ? cond.label : ""}`, bar:{val:r.hrMax,max:220,color:"#ea580c"} },
+        { label:"FC Mínima · Reposo", html:`<div class="card-value" style="color:#7c3aed">${r.hrMin}<span class="card-unit">lpm</span></div>`, sub:`Exacto para ${selAge} años · ${cond ? cond.label : ""}`, bar:{val:r.hrMin,max:100,color:"#7c3aed"} },
+      ];
+      el.innerHTML = cards.map(c => `
+        <div class="card">
+          <div class="card-label">${c.label}</div>
+          ${c.html}
+          ${c.bar ? `<div class="bar-bg"><div class="bar-fill" style="width:${Math.round(c.bar.val/c.bar.max*100)}%;background:${c.bar.color}"></div></div>` : ""}
+          <div class="card-sub">${c.sub}</div>
+        </div>`).join("");
+      return;
+    }
+
+    // Varias condiciones → mostrar rangos entre mínimo y máximo de todas
+    const vfc = Math.round(rows.reduce((s,r)=>s+r.vfc,0)/rows.length);
+    const cards = [
+      { label:"VFC · Variabilidad FC", html:`<div class="card-range" style="color:#059669">${Math.min(...rows.map(r=>r.vfc))} <span style="color:#94a3b8;font-size:16px">–</span> ${Math.max(...rows.map(r=>r.vfc))}<span class="card-unit">ms</span></div>`, sub:`Rango según condición · ${selAge} años`, bar:{val:vfc,max:140,color:"#059669"} },
+      { label:"VO₂ Máx / VO₂ Mín", html:`<div class="card-range" style="color:#2563eb">${Math.min(...rows.map(r=>r.vo2Min))} <span style="color:#94a3b8;font-size:16px">–</span> ${Math.max(...rows.map(r=>r.vo2Max))}<span class="card-unit">ml/kg/min</span></div>`, sub:`Rango según condición · ${selAge} años`, bar:null },
+      { label:"FC Máxima", html:`<div class="card-range" style="color:#ea580c">${Math.min(...rows.map(r=>r.hrMax))} <span style="color:#94a3b8;font-size:16px">–</span> ${Math.max(...rows.map(r=>r.hrMax))}<span class="card-unit">lpm</span></div>`, sub:`Rango según condición · ${selAge} años`, bar:{val:Math.max(...rows.map(r=>r.hrMax)),max:220,color:"#ea580c"} },
+      { label:"FC Mínima · Reposo", html:`<div class="card-range" style="color:#7c3aed">${Math.min(...rows.map(r=>r.hrMin))} <span style="color:#94a3b8;font-size:16px">–</span> ${Math.max(...rows.map(r=>r.hrMin))}<span class="card-unit">lpm</span></div>`, sub:`Rango según condición · ${selAge} años`, bar:{val:Math.max(...rows.map(r=>r.hrMin)),max:100,color:"#7c3aed"} },
+    ];
+    el.innerHTML = cards.map(c => `
+      <div class="card">
+        <div class="card-label">${c.label}</div>
+        ${c.html}
+        ${c.bar ? `<div class="bar-bg"><div class="bar-fill" style="width:${Math.round(c.bar.val/c.bar.max*100)}%;background:${c.bar.color}"></div></div>` : ""}
+        <div class="card-sub">${c.sub}</div>
+      </div>`).join("");
+    return;
+  }
+
+  // Sin edad exacta → modo general con DATA agrupada
+  if (!filtered.length) { el.innerHTML = '<div class="empty">Sin datos para los filtros.</div>'; return; }
   const vfc = avg(filtered, "vfc");
   const cards = [
-    {
-      label: "VFC · Variabilidad F. Cardíaca",
-      html: `<div class="card-value" style="color:#059669">${vfc}<span class="card-unit">ms</span></div>`,
-      sub: vfcDesc(vfc),
-      bar: { val: vfc, max: 140, color: "#059669" },
-    },
-    {
-      label: "VO₂ Máximo / Mínimo",
-      html: `<div class="card-range" style="color:#2563eb">${minV(filtered,"vo2Min")} <span style="color:#94a3b8;font-size:20px">–</span> ${maxV(filtered,"vo2Max")}<span class="card-unit">ml/kg/min</span></div>`,
-      sub: "Rango del grupo seleccionado",
-      bar: null,
-    },
-    {
-      label: "FC Máxima",
-      html: `<div class="card-value" style="color:#ea580c">${maxV(filtered,"hrMax")}<span class="card-unit">lpm</span></div>`,
-      sub: `Rango: ${minV(filtered,"hrMax")} – ${maxV(filtered,"hrMax")} lpm`,
-      bar: { val: maxV(filtered,"hrMax"), max: 220, color: "#ea580c" },
-    },
-    {
-      label: "FC Mínima · Reposo",
-      html: `<div class="card-value" style="color:#7c3aed">${minV(filtered,"hrMin")}<span class="card-unit">lpm</span></div>`,
-      sub: `Rango: ${minV(filtered,"hrMin")} – ${maxV(filtered,"hrMin")} lpm`,
-      bar: { val: maxV(filtered,"hrMin"), max: 100, color: "#7c3aed" },
-    },
+    { label:"VFC · Variabilidad FC", html:`<div class="card-value" style="color:#059669">${vfc}<span class="card-unit">ms</span></div>`, sub:vfcDesc(vfc), bar:{val:vfc,max:140,color:"#059669"} },
+    { label:"VO₂ Máximo / Mínimo", html:`<div class="card-range" style="color:#2563eb">${minV(filtered,"vo2Min")} <span style="color:#94a3b8;font-size:18px">–</span> ${maxV(filtered,"vo2Max")}<span class="card-unit">ml/kg/min</span></div>`, sub:"Rango del grupo seleccionado", bar:null },
+    { label:"FC Máxima", html:`<div class="card-value" style="color:#ea580c">${maxV(filtered,"hrMax")}<span class="card-unit">lpm</span></div>`, sub:`Rango: ${minV(filtered,"hrMax")} – ${maxV(filtered,"hrMax")} lpm`, bar:{val:maxV(filtered,"hrMax"),max:220,color:"#ea580c"} },
+    { label:"FC Mínima · Reposo", html:`<div class="card-value" style="color:#7c3aed">${minV(filtered,"hrMin")}<span class="card-unit">lpm</span></div>`, sub:`Rango: ${minV(filtered,"hrMin")} – ${maxV(filtered,"hrMin")} lpm`, bar:{val:maxV(filtered,"hrMin"),max:100,color:"#7c3aed"} },
   ];
-
   el.innerHTML = cards.map(c => `
     <div class="card">
       <div class="card-label">${c.label}</div>
       ${c.html}
       ${c.bar ? `<div class="bar-bg"><div class="bar-fill" style="width:${Math.round(c.bar.val/c.bar.max*100)}%;background:${c.bar.color}"></div></div>` : ""}
       <div class="card-sub">${c.sub}</div>
-    </div>
-  `).join("");
+    </div>`).join("");
 }
 
+// ─── RENDER TABLE ────────────────────────────────────────────────────────
 function renderTable(filtered) {
   const tbody = document.getElementById("tbody");
   const foot = document.getElementById("table-foot");
-  const rows = filtered.length ? filtered : DATA.slice(0, 12);
-
-  tbody.innerHTML = rows.map((row, i) => {
+  const rows = filtered.length ? filtered : DATA.slice(0,12);
+  tbody.innerHTML = rows.map(row => {
     const c = CONDITIONS.find(x => x.id === row.cond);
     return `<tr>
       <td style="color:#475569;font-weight:600">${row.age}</td>
@@ -355,43 +743,162 @@ function renderTable(filtered) {
       <td style="color:#2563eb;font-weight:700">${row.vo2Max}</td>
       <td style="color:#0284c7;font-weight:700">${row.vo2Min}</td>
       <td>
-        <span style="color:#059669;font-weight:700;margin-right:8px">${row.vfc}</span>
-        <span style="display:inline-block;width:60px;height:5px;background:#e2e8f0;border-radius:4px;vertical-align:middle">
+        <span style="color:#059669;font-weight:700;margin-right:6px">${row.vfc}</span>
+        <span style="display:inline-block;width:50px;height:5px;background:#e2e8f0;border-radius:4px;vertical-align:middle">
           <span style="display:block;width:${Math.round(row.vfc/130*100)}%;height:100%;background:#059669;border-radius:4px"></span>
         </span>
       </td>
     </tr>`;
   }).join("");
-
-  if (!filtered.length) {
-    foot.textContent = `Mostrando 12 de ${DATA.length} registros. Aplica un filtro para ver todos.`;
-  } else {
-    foot.textContent = `${filtered.length} registro${filtered.length !== 1 ? "s" : ""} mostrado${filtered.length !== 1 ? "s" : ""}.`;
-  }
+  foot.textContent = filtered.length
+    ? `${filtered.length} registro${filtered.length!==1?"s":""} mostrado${filtered.length!==1?"s":""}.`
+    : `Mostrando 12 de ${DATA.length}. Aplica un filtro para ver todos.`;
 }
 
 function renderBadge(filtered) {
-  const el = document.getElementById("badge");
-  el.innerHTML = `📊 Mostrando <strong>${filtered.length}</strong> registro${filtered.length !== 1 ? "s" : ""} — promedio de los grupos seleccionados`;
+  document.getElementById("badge").innerHTML =
+    `📊 <strong>${filtered.length}</strong> registro${filtered.length!==1?"s":""} — promedio del grupo seleccionado`;
 }
 
+// ─── COMPARATIVA ─────────────────────────────────────────────────────────
+function runComparativa() {
+  const myAge = parseInt(document.getElementById("my-age").value);
+  const myHrRest = parseInt(document.getElementById("my-hr-rest").value);
+  const myHrMax = parseInt(document.getElementById("my-hr-max").value);
+  const myVo2 = parseInt(document.getElementById("my-vo2").value);
+  const myVfc = parseInt(document.getElementById("my-vfc").value);
+
+  if (!myAge) {
+    document.getElementById("comp-result").innerHTML = '<div class="no-profile">Introduce tu edad para comparar.</div>';
+    return;
+  }
+  if (compCond === "all") {
+    document.getElementById("comp-result").innerHTML = '<div class="no-profile">Selecciona una condición física de referencia (no "Todas") para poder comparar con precisión.</div>';
+    return;
+  }
+
+  const group = ageGroup(myAge);
+  // Valor exacto interpolado para la edad introducida
+  const ref = interpolate(compCond, myAge);
+  if (!ref) {
+    document.getElementById("comp-result").innerHTML = '<div class="no-profile">No hay datos de referencia para esa condición.</div>';
+    return;
+  }
+  const cond = CONDITIONS.find(c => c.id === compCond);
+
+  function statusBadge(myVal, refVal, higherIsBetter=true) {
+    if (!myVal) return '';
+    const diff = myVal - refVal;
+    const pct = Math.round(Math.abs(diff)/refVal*100);
+    const better = higherIsBetter ? diff > 0 : diff < 0;
+    const within = Math.abs(diff) <= refVal * 0.05;
+    if (within) return `<span class="comp-status within">✓ Dentro del rango</span>`;
+    if (better) return `<span class="comp-status above">↑ ${pct}% por encima</span>`;
+    return `<span class="comp-status below">↓ ${pct}% por debajo</span>`;
+  }
+
+  function compBarHTML(label, myVal, refVal, barMax, color) {
+    if (!myVal) return '';
+    const myPct = Math.min(100, Math.round(myVal/barMax*100));
+    const refPct = Math.min(100, Math.round(refVal/barMax*100));
+    return `
+      <div class="comp-row">
+        <div class="comp-metric-name">${label}</div>
+        <div class="comp-bars">
+          <div class="comp-bar-row">
+            <div class="comp-bar-label" style="font-size:10px;color:var(--text3)">Tú</div>
+            <div class="comp-bar-track"><div class="comp-bar-fill" style="width:${myPct}%;background:${color}"></div></div>
+            <div class="comp-bar-val" style="color:${color}">${myVal}</div>
+          </div>
+          <div class="comp-bar-row">
+            <div class="comp-bar-label" style="font-size:10px;color:var(--text3)">Ref.</div>
+            <div class="comp-bar-track"><div class="comp-bar-fill" style="width:${refPct}%;background:#cbd5e1"></div></div>
+            <div class="comp-bar-val" style="color:#94a3b8">${refVal}</div>
+          </div>
+        </div>
+        <div style="flex-shrink:0">${statusBadge(myVal, refVal, true)}</div>
+      </div>`;
+  }
+
+  document.getElementById("comp-result").innerHTML = `
+    <div class="comp-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div class="comp-title">Tu perfil vs referencia</div>
+        <span class="cond-badge" style="background:${cond.bg};color:${cond.color};padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700">
+          ${cond.label} · ${group}
+        </span>
+      </div>
+      ${compBarHTML("VO₂ Máx", myVo2, ref.vo2Max, 100, "#2563eb")}
+      ${compBarHTML("VFC (ms)", myVfc, ref.vfc, 140, "#059669")}
+      ${compBarHTML("FC Máxima", myHrMax, ref.hrMax, 220, "#ea580c")}
+      ${compBarHTML("FC Reposo", myHrRest ? myHrRest : null, ref.hrMin, 100, "#7c3aed")}
+    </div>
+    <div style="font-size:11px;color:var(--text3);padding:0 4px 16px">
+      ⚡ Referencia interpolada para <strong>${myAge} años · ${cond.label}</strong>:
+      FC Máx ${ref.hrMax} lpm · FC Reposo ${ref.hrMin} lpm · VO₂ ${ref.vo2Max} ml/kg/min · VFC ${ref.vfc} ms.
+      No sustituye valoración médica.
+    </div>`;
+}
+
+// ─── GLOSARIO ────────────────────────────────────────────────────────────
+function buildGlosario() {
+  const el = document.getElementById("glosario-list");
+  el.innerHTML = GLOSSARY.map(g => `
+    <div class="gloss-item">
+      <div class="gloss-header" onclick="toggleGloss('${g.key}')">
+        <div class="gloss-header-left">
+          <div class="gloss-icon" style="background:${g.bg}">${g.icon}</div>
+          <div>
+            <div class="gloss-name" style="color:${g.color}">${g.name}</div>
+            <div class="gloss-abbr">${g.full}</div>
+          </div>
+        </div>
+        <div class="gloss-arrow" id="gloss-arrow-${g.key}">▼</div>
+      </div>
+      <div class="gloss-body" id="gloss-body-${g.key}">
+        <div class="gloss-content">
+          <p class="gloss-desc">${g.desc}</p>
+          <div class="gloss-ranges">
+            ${g.ranges.map(r => `
+              <div class="gloss-range-row">
+                <div class="gloss-range-dot" style="background:${r.color}"></div>
+                <div class="gloss-range-label">${r.label}</div>
+                <div class="gloss-range-val">${r.val}</div>
+              </div>`).join("")}
+          </div>
+          <div class="gloss-tip">💡 ${g.tip}</div>
+        </div>
+      </div>
+    </div>`).join("");
+}
+
+function toggleGloss(key) {
+  const body = document.getElementById('gloss-body-' + key);
+  const arrow = document.getElementById('gloss-arrow-' + key);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  arrow.classList.toggle('open', !isOpen);
+}
+
+// ─── MAIN RENDER ─────────────────────────────────────────────────────────
 function render() {
   const filtered = getFiltered();
-  renderChips();
+  renderCondChips("cond-chips", selCond, v => { selCond = v; });
+  renderCondChips("comp-cond-chips", compCond, v => { compCond = v; });
   renderBadge(filtered);
   renderCards(filtered);
   renderTable(filtered);
 }
 
+// ─── INIT ────────────────────────────────────────────────────────────────
+buildWheel();
+buildGlosario();
 render();
 </script>
 
-<!-- Service Worker registration -->
 <script>
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
-    });
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); });
   }
 </script>
 </body>
